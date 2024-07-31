@@ -6,6 +6,6 @@
 
 在源码根目录执行：
 ```
-bash /device/xiaomi/atom/patch/patch.sh
+bash ./device/xiaomi/atom/patch/patch.sh
 ```
 请自行留意补丁合并过程中的错误
