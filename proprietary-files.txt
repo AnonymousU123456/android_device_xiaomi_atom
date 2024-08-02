@@ -23,5 +23,4 @@ lib64/libcomutils.so
 lib64/libsink.so
 system_ext/lib64/vendor.mediatek.hardware.videotelephony@1.0.so
 
-framework/mediatek-services.jar
 

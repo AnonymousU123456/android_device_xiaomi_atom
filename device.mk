@@ -22,9 +22,6 @@ DEVICE_PACKAGE_OVERLAYS += \
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
-# Setup dalvik vm configs
-$(call inherit-product, frameworks/native/build/phone-xhdpi-8192-dalvik-heap.mk)
-
 # Top Overlay for vendor based on MIUI
 PRODUCT_PACKAGES += \
     treble-overlay-xiaomi-redmi10x5g \
@@ -50,7 +47,6 @@ PRODUCT_BUILD_SUPER_PARTITION := false
     
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio.service.mediatek \
     android.hardware.audio@6.0-impl \
     android.hardware.audio.effect@7.0-impl \
     android.hardware.audio.effect@6.0-impl \
@@ -70,8 +66,6 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     audio.usbv2.default \
     audio_policy.stub \
-    libbatterylistener \
-    libvolumelistener \
     libaudiopreprocessing \
     libbundlewrapper \
     libdownmix \
@@ -85,7 +79,6 @@ PRODUCT_PACKAGES += \
     libnbaio_mono \
     libaudiofoundation \
     libaudiofoundation.vendor \
-    libtinycompress.vendor \
     libaudio-resampler \
     tinymix 
 
@@ -108,16 +101,13 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-    libbluetooth_audio_session.vendor \
     android.hardware.bluetooth@1.0.vendor \
     android.hardware.bluetooth@1.1.vendor \
     android.hardware.bluetooth.audio-impl \
     android.hardware.bluetooth.a2dp@1.0.vendor \
-    btremoted \
-    libldacBT_dec \
-    libbt-vendor \
-    libbtconfigstore \
-    libbluetooth_mtk
+    btremoted 
+    # libbt-vendor \
+    # libbluetooth_mtk
 
 # Sensors
 PRODUCT_PACKAGES += \
@@ -135,7 +125,6 @@ PRODUCT_PACKAGES += \
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
-    android.hardware.thermal@2.0-impl \
     android.hardware.thermal@1.0.vendor
 
 # TinyXML
@@ -182,12 +171,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
-    android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service \
-    libdisplayconfig \
     libdrm.vendor \
     libvulkan
 
@@ -201,8 +188,6 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.3.vendor \
     android.hardware.drm@1.0-impl:64 \
     android.hardware.drm@1.0-service-lazy \
-    android.hardware.drm@1.3-service.clearkey \
-    android.hardware.drm@1.4-service.clearkey \
     android.hardware.drm@1.4.vendor
 
 # Fastbootd
@@ -216,7 +201,6 @@ PRODUCT_PACKAGES += \
     vendor.xiaomi.hardware.touchfeature@1.0 \
     vendor.xiaomi.hardware.displayfeature@1.0 \
     vendor.xiaomi.hardware.fingerprintextension@1.0.vendor \
-    android.hardware.biometrics.fingerprint@2.3-service \
     android.hardware.biometrics.fingerprint@2.3-service.xiaomi_atom
 
 # Fstab
@@ -261,26 +245,22 @@ PRODUCT_PACKAGES += \
 
 # IMS
 PRODUCT_PACKAGES += \
-	vendor.mediatek.hardware.mtkradioex@1.0 \
-	vendor.mediatek.hardware.videotelephony@1.0 \
 	ImsService \
 	EngineerMode \
-	libsink \
 	libem_support_jni \
     libem_aoltest_jni \
     libem_audio_jni \
     libem_wifi_jni \
+    libem_bleoffload_jni \
     mediatek-carrier-config-manager \
 	mediatek-common \
     mediatek-framework \
-    mediatek-gwsdv2 \
     mediatek-ims-base \
     mediatek-ims-common \
     mediatek-ims-extension-plugin \
     mediatek-telecom-common \
     mediatek-telephony-base \
-    mediatek-telephony-common \
-    mediatek-wfo-legacy
+    mediatek-telephony-common
 
 	
 PRODUCT_BOOT_JARS += \
@@ -307,25 +287,6 @@ PRODUCT_COPY_FILES += \
 # Keystore
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1.vendor
-
-# Lights
-PRODUCT_PACKAGES += \
-    lights.atom
-
-# Media
-PRODUCT_PACKAGES += \
-    libarbitrarybytes \
-    libc2dcolorconvert \
-    libmm-omxcore \
-    libOmxAacEnc \
-    libOmxAmrEnc \
-    libOmxCore \
-    libOmxEvrcEnc \
-    libOmxG711Enc \
-    libOmxQcelp13Enc \
-    libOmxVdec \
-    libOmxVenc \
-    libstagefrighthw
 
 PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)/configs/media/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
@@ -420,19 +381,13 @@ PRODUCT_PACKAGES += \
 
 # RIL
 PRODUCT_PACKAGES += \
-    CarrierConfigOverlay \
     android.hardware.radio@1.5.vendor \
     android.hardware.radio.config@1.2.vendor \
     android.hardware.radio.deprecated@1.0.vendor \
     libprotobuf-cpp-full \
     libril \
     librilutils \
-    librmnetctl \
     libxml2
-
-# Shim
-PRODUCT_PACKAGES += \
-    libwatermark_shim
 
 # USB
 PRODUCT_PACKAGES += \
@@ -443,14 +398,9 @@ PRODUCT_PACKAGES += \
     init.mt6873.rc \
     init.mt6873.usb.rc \
     fstab.mt6873 \
-    ueventd.mt6873.rc\
 
 # WiFi
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
-    hostapd \
-    libwpa_client \
-    wpa_supplicant \
     TetheringConfigOverlay \
     WifiResCommon \
     libkeystore-wifi-hidl \
