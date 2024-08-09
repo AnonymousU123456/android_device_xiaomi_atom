@@ -41,7 +41,7 @@ BOARD_DTB_OFFSET := 0x0bc08000
 BOARD_KERNEL_IMAGE_NAME := Image.gz
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_SOURCE := kernel/xiaomi/atom
-TARGET_KERNEL_CONFIG := atom_user_defconfig
+TARGET_KERNEL_CONFIG := k6875v1_64_defconfig
 TARGET_FORCE_PREBUILT_KERNEL := true
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/bootimg/kernel
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/bootimg/dtb
@@ -59,6 +59,7 @@ BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
 
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
+# BOARD_KERNEL_CMDLINE += loglevel=15
 
 INLINE_KERNEL_BUILDING := true
 
