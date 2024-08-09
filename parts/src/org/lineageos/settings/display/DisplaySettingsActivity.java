@@ -26,7 +26,6 @@ import android.content.ComponentName;
 import org.lineageos.settings.doze.DozeService;
 
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
-import com.android.settingslib.widget.R;
 
 public class DisplaySettingsActivity extends CollapsingToolbarBaseActivity {
 
@@ -36,7 +35,7 @@ public class DisplaySettingsActivity extends CollapsingToolbarBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame,
+        getFragmentManager().beginTransaction().replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame,
                 new DisplaySettingsFragment(), TAG_DCDIMMING).commit();
     }
 
