@@ -1,0 +1,41 @@
+From b8d1e6ff640d1c76ef7423df7d588b2cc673939a Mon Sep 17 00:00:00 2001
+From: xjl12 <1062256455@qq.com>
+Date: Wed, 15 Mar 2023 17:55:19 +0800
+Subject: [PATCH] system_sepolicy
+
+Change-Id: I147dea757c3769e8ac38b340705c548cb3bc7248
+---
+ Android.bp | 2 --
+ Android.mk | 3 ---
+ 2 files changed, 5 deletions(-)
+
+diff --git a/Android.bp b/Android.bp
+index 1d8e5dd46..879f8d0f5 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -645,8 +645,6 @@ se_policy_conf {
+         system_ext_private_policy +
+         product_public_policy +
+         product_private_policy + [
+-        ":se_build_files{.plat_vendor}",
+-        ":se_build_files{.vendor}",
+         ":se_build_files{.odm}",
+     ],
+     target_recovery: true,
+diff --git a/Android.mk b/Android.mk
+index 37acb756f..78ff9e117 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -68,9 +68,6 @@ HAS_PRODUCT_SEPOLICY_DIR := true
+ endif
+ 
+ ifeq ($(SELINUX_IGNORE_NEVERALLOWS),true)
+-ifeq ($(TARGET_BUILD_VARIANT),user)
+-$(error SELINUX_IGNORE_NEVERALLOWS := true cannot be used in user builds)
+-endif
+ $(warning Be careful when using the SELINUX_IGNORE_NEVERALLOWS flag. \
+           It does not work in user builds and using it will \
+           not stop you from failing CTS.)
+-- 
+2.45.2
+
