@@ -1,5 +1,0 @@
-dex_import {
-	name: "mediatek-ims-extension-plugin",
-	owner: "xiaomi",
-	jars: ["mediatek-ims-extension-plugin.jar"],
-}

@@ -57,3 +57,18 @@ cc_prebuilt_library_shared {
 		},
 	},
 }
+
+cc_prebuilt_library_shared {
+  name: "libem_bleoffload_jni",
+  compile_multilib: "both",
+  check_elf_files: false,
+	owner: "mtk",
+	target: {
+		android_arm: {
+			srcs: ["arm/libem_bleoffload_jni.so",],
+		},
+		android_arm64: {
+			srcs: ["arm64/libem_bleoffload_jni.so"],
+		},
+	},
+}
