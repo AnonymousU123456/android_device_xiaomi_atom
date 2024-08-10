@@ -20,6 +20,7 @@ EXTRA_UDFPS_ANIMATIONS := true
 TARGET_BUILD_APERTURE_CAMERA := false
 TARGET_SUPPORTS_QUICK_TAP := true
 TARGET_USES_MINI_GAPPS := true
+PRODUCT_DEFAULT_DEV_CERTIFICATE := build/make/target/product/security/releasekey
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_NAME := lineage_atom
