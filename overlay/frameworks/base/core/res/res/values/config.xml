@@ -699,6 +699,9 @@
      <string name="config_wlan_data_service_package">com.android.phone</string>
      <string name="config_wlan_network_service_package">com.android.phone</string>
 
+    <!-- Type of the udfps long press sensor. Empty if long press is not supported. -->
+    <string name="config_dozeUdfpsLongPressSensorType" translatable="false">com.google.sensor.long_press</string>
+
     <!-- Enables or disables haptic effect when the text insertion/selection handle is moved
          manually by the user. Off by default, since the expected haptic feedback may not be
          available on some devices. -->
