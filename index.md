@@ -53,7 +53,9 @@ b7decb1bb77e79bb4d4b34e6d0813bba3539689e2497e7d864eff694f7999a54  Flashable-line
 
 
 ## 已知问题
+#### 欢迎有能力者通过Issues或PR提出解决方案
 - 蓝牙音频（请使用有线耳机替代）
+- 哔哩哔哩APP播放高分辨率视频时硬件解码异常（请切换至低分辨率）
 
 ## 感谢 🙌
 @LineageOS @PixelExperience @LawnchairLauncher @phhusson @ymdzq @HuaZoffice @HuaLiMao-AQ @xiaomi-mt6885-devs @MiCode 以及为本项目做出贡献的其他commiters，各位捐赠者们！
