@@ -6,5 +6,5 @@
         recents component. When using a different default launcher, change this appropriately or
         use the default systemui implementation: com.android.systemui/.recents.RecentsActivity -->
         <string name="config_recentsComponentName" translatable="false"
-        >app.lawnchair.debug/com.android.quickstep.RecentsActivity</string>
+        >app.lawnchair/com.android.quickstep.RecentsActivity</string>
 </resources>
