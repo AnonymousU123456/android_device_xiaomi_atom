@@ -1,0 +1,124 @@
+From 59f86faa4ab0eb4ab45e2571c974afef8151c7fa Mon Sep 17 00:00:00 2001
+From: xjl12 <xiao-xjle@qq.com>
+Date: Thu, 15 Aug 2024 20:38:17 +0800
+Subject: [PATCH] Screen off FOD
+
+Change-Id: Iee09654eb96e0fdb86bf4a7b9e6dad8167ce3e88
+---
+ .../BiometricFingerprintConstants.java           |  2 +-
+ .../systemui/biometrics/UdfpsController.java     | 16 ++++++++++++++++
+ .../hidl/FingerprintAuthenticationClient.java    |  6 +++++-
+ 3 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/core/java/android/hardware/biometrics/BiometricFingerprintConstants.java b/core/java/android/hardware/biometrics/BiometricFingerprintConstants.java
+index 770448bd594b..4a7f2b9f5b4f 100644
+--- a/core/java/android/hardware/biometrics/BiometricFingerprintConstants.java
++++ b/core/java/android/hardware/biometrics/BiometricFingerprintConstants.java
+@@ -342,10 +342,10 @@ public interface BiometricFingerprintConstants {
+             case FINGERPRINT_ACQUIRED_TOO_FAST:
+             case FINGERPRINT_ACQUIRED_IMMOBILE:
+             case FINGERPRINT_ACQUIRED_TOO_BRIGHT:
+-            case FINGERPRINT_ACQUIRED_VENDOR:
+                 // Disable the UDFPS mode because the image capture has finished. The overlay
+                 // can be hidden later, once the authentication result arrives.
+                 return true;
++            case FINGERPRINT_ACQUIRED_VENDOR:
+             case FINGERPRINT_ACQUIRED_UNKNOWN:
+             default:
+                 // Keep the UDFPS mode in case of an unknown message.
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+index eaa664f48d61..9981b37f2181 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java
+@@ -19,6 +19,7 @@ package com.android.systemui.biometrics;
+ import static android.app.StatusBarManager.SESSION_BIOMETRIC_PROMPT;
+ import static android.app.StatusBarManager.SESSION_KEYGUARD;
+ import static android.hardware.biometrics.BiometricFingerprintConstants.FINGERPRINT_ACQUIRED_GOOD;
++import static android.hardware.biometrics.BiometricFingerprintConstants.FINGERPRINT_ACQUIRED_VENDOR;
+ import static android.hardware.biometrics.BiometricRequestConstants.REASON_AUTH_BP;
+ import static android.hardware.biometrics.BiometricRequestConstants.REASON_AUTH_KEYGUARD;
+ import static android.hardware.biometrics.BiometricRequestConstants.REASON_ENROLL_ENROLLING;
+@@ -35,6 +36,7 @@ import android.content.IntentFilter;
+ import android.graphics.Rect;
+ import android.hardware.biometrics.BiometricFingerprintConstants;
+ import android.hardware.biometrics.SensorProperties;
++import android.hardware.display.AmbientDisplayConfiguration;
+ import android.hardware.display.DisplayManager;
+ import android.hardware.fingerprint.FingerprintManager;
+ import android.hardware.fingerprint.FingerprintSensorProperties;
+@@ -48,6 +50,7 @@ import android.os.PowerManager;
+ import android.os.Trace;
+ import android.os.VibrationAttributes;
+ import android.os.VibrationEffect;
++import android.os.UserHandle;
+ import android.provider.Settings;
+ import android.util.Log;
+ import android.view.HapticFeedbackConstants;
+@@ -225,6 +228,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+     private boolean mUseFrameworkDimming;
+     private int[][] mBrightnessAlphaArray;
+ 
++    private final AmbientDisplayConfiguration mAmbientDisplayConfiguration;
++
+     @VisibleForTesting
+     public static final VibrationAttributes UDFPS_VIBRATION_ATTRIBUTES =
+             new VibrationAttributes.Builder()
+@@ -343,6 +348,15 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+                     unconfigureDisplay(view);
+                     tryAodSendFingerUp();
+                 });
++            } else {
++                boolean acquiredVendor = acquiredInfo == FINGERPRINT_ACQUIRED_VENDOR;
++                final boolean isAodEnabled = mAmbientDisplayConfiguration.alwaysOnEnabled(UserHandle.USER_CURRENT);
++                final boolean isShowingAmbientDisplay = mStatusBarStateController.isDozing() && mScreenOn;
++                if (acquiredVendor && ((!mScreenOn) || (isAodEnabled && isShowingAmbientDisplay))) {
++                    mPowerManager.wakeUp(mSystemClock.uptimeMillis(),
++                            PowerManager.WAKE_REASON_GESTURE, TAG);
++                    onAodInterrupt(0, 0, 0, 0);
++                }
+             }
+         }
+ 
+@@ -774,6 +788,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
+ 
+         udfpsHapticsSimulator.setUdfpsController(this);
+         udfpsShell.setUdfpsOverlayController(mUdfpsOverlayController);
++
++        mAmbientDisplayConfiguration = new AmbientDisplayConfiguration(mContext);
+     }
+ 
+     /**
+diff --git a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/FingerprintAuthenticationClient.java b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/FingerprintAuthenticationClient.java
+index 97760aa64c84..0d9f381539cb 100644
+--- a/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/FingerprintAuthenticationClient.java
++++ b/services/core/java/com/android/server/biometrics/sensors/fingerprint/hidl/FingerprintAuthenticationClient.java
+@@ -71,6 +71,7 @@ class FingerprintAuthenticationClient
+     private static final String TAG = "Biometrics/FingerprintAuthClient";
+ 
+     private final LockoutFrameworkImpl mLockoutFrameworkImpl;
++    @Nullable private final IUdfpsOverlayController mUdfpsOverlayController;
+     @NonNull private final SensorOverlays mSensorOverlays;
+     @NonNull private final FingerprintSensorPropertiesInternal mSensorProps;
+     @NonNull private final CallbackWithProbe<Probe> mALSProbeCallback;
+@@ -99,6 +100,7 @@ class FingerprintAuthenticationClient
+                 isStrongBiometric, taskStackListener, lockoutTracker, allowBackgroundAuthentication,
+                 false /* shouldVibrate */, sensorStrength);
+         setRequestId(requestId);
++        mUdfpsOverlayController = udfpsOverlayController;
+         mLockoutFrameworkImpl = lockoutTracker;
+         if (sidefpsControllerRefactor()) {
+             mSensorOverlays = new SensorOverlays(udfpsOverlayController);
+@@ -205,7 +207,9 @@ class FingerprintAuthenticationClient
+         mAuthenticationStateListeners.onAuthenticationAcquired(
+                 BiometricSourceType.FINGERPRINT, getRequestReason(), acquiredInfo);
+         super.onAcquired(acquiredInfo, vendorCode);
+-
++        try {
++            mUdfpsOverlayController.onAcquired(getSensorId(), acquiredInfo);
++        } catch (Exception e) { }
+         @LockoutTracker.LockoutMode final int lockoutMode =
+                 getLockoutTracker().getLockoutModeForUser(getTargetUserId());
+         if (lockoutMode == LockoutTracker.LOCKOUT_NONE) {
+-- 
+2.45.2
+
