@@ -18,6 +18,10 @@
 package org.lineageos.settings.doze;
 
 import android.app.Service;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Notification;
+import android.telephony.TelephonyManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +33,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
+import androidx.core.app.NotificationCompat;
 import android.content.SharedPreferences;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -49,6 +54,8 @@ public class DozeService extends Service {
     private IDisplayFeature mDisplayFeature;
     private DCBinder mBinder;
     private SharedPreferences sharedPrefs;
+    private TelephonyManager mTelephonyManager;
+    private NotificationManager mNotificationManager;
 
     @Override
     public void onCreate() {
@@ -63,6 +70,7 @@ public class DozeService extends Service {
         registerReceiver(mScreenStateReceiver, screenStateFilter);
 
         hbmObserver = new HBMObserver(new Handler());
+                
         getContentResolver().registerContentObserver(Settings.System.getUriFor(DozeUtils.HBM_SWITCH), false, hbmObserver);
 
         udfpsViewObserver = new UdfpsViewObserver(new Handler());
@@ -72,6 +80,12 @@ public class DozeService extends Service {
                     udfpsViewObserver);
         }
         mBinder = new DCBinder();
+
+        NotificationChannel notificationChannel = new NotificationChannel("001", "IMS Check",
+                NotificationManager.IMPORTANCE_DEFAULT);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.createNotificationChannel(notificationChannel);
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     @Override
@@ -110,6 +124,16 @@ public class DozeService extends Service {
         if (DozeUtils.isHandwaveGestureEnabled(this) ||
                 DozeUtils.isPocketGestureEnabled(this)) {
             mProximitySensor.disable();
+        }
+        if (!mTelephonyManager.isImsRegistered()) {
+            Log.e(TAG, "isImsRegistered == false!");
+            Notification notify = new NotificationCompat.Builder(this, "001")
+                    .setWhen(System.currentTimeMillis())
+                    .setContentTitle("IMS异常")
+                    .setContentText("IMS服务未注册，请立即重启设备，以免错过重要来电和短信！建议设置首选网络为LTE")
+                    .setSmallIcon(android.R.drawable.sym_def_app_icon)
+                    .build();
+            mNotificationManager.notify(1, notify);
         }
     }
 

@@ -286,6 +286,7 @@ PRODUCT_PACKAGES += XiaomiParts
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-mediatek.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-mediatek.xml \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-xiaomi.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-xiaomi.xml \
+    $(LOCAL_PATH)/configs/permissions/default-permission-xiaomi.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/org.lineageos.settings_default-permissions.xml \
 
 # Power
 PRODUCT_PACKAGES += \
