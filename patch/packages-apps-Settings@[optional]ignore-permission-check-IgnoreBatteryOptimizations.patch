@@ -1,0 +1,38 @@
+From 1a3192ad49f885a01a175a4713384568d14ec1f5 Mon Sep 17 00:00:00 2001
+From: xjl12 <xiao-xjle@qq.com>
+Date: Thu, 15 Aug 2024 15:11:03 +0800
+Subject: [PATCH] ignore permission check IgnoreBatteryOptimizations
+
+Change-Id: I182772396e9bb45501eb6ced2191afb0d9763b38
+---
+ .../RequestIgnoreBatteryOptimizations.java         | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/src/com/android/settings/fuelgauge/RequestIgnoreBatteryOptimizations.java b/src/com/android/settings/fuelgauge/RequestIgnoreBatteryOptimizations.java
+index d948cc0f13a..64297d1c1cf 100644
+--- a/src/com/android/settings/fuelgauge/RequestIgnoreBatteryOptimizations.java
++++ b/src/com/android/settings/fuelgauge/RequestIgnoreBatteryOptimizations.java
+@@ -71,20 +71,6 @@ public class RequestIgnoreBatteryOptimizations extends AlertActivity
+             return;
+         }
+ 
+-        if (getPackageManager()
+-                        .checkPermission(
+-                                Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+-                                mPackageName)
+-                != PackageManager.PERMISSION_GRANTED) {
+-            debugLog(
+-                    "Requested package "
+-                            + mPackageName
+-                            + " does not hold permission "
+-                            + Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+-            finish();
+-            return;
+-        }
+-
+         ApplicationInfo ai;
+         try {
+             ai = getPackageManager().getApplicationInfo(mPackageName, 0);
+-- 
+2.45.2
+

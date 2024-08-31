@@ -31,7 +31,7 @@ import java.util.concurrent.Future;
 
 public class PickupSensor implements SensorEventListener {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String TAG = "PickupSensor";
 
     private static final int MIN_PULSE_INTERVAL_MS = 2500;
@@ -46,7 +46,7 @@ public class PickupSensor implements SensorEventListener {
     public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.getSensor(mSensorManager, "xiaomi.sensor.pickup");
+        mSensor = DozeUtils.getSensor(mSensorManager, "xiaomi.sensor.fod");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -64,10 +64,7 @@ public class PickupSensor implements SensorEventListener {
         }
 
         mEntryTimestamp = SystemClock.elapsedRealtime();
-
-        if (event.values[0] == 1) {
-            DozeUtils.launchDozePulse(mContext);
-        }
+        DozeUtils.launchDozePulse(mContext);
     }
 
     @Override

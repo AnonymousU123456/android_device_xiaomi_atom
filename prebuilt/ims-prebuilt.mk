@@ -1,5 +1,10 @@
 PRODUCT_PACKAGES += \
 	EngineerMode \
+    libem_support_jni \
+    libem_aoltest_jni \
+    libem_audio_jni \
+    libem_wifi_jni \
+    libem_bleoffload_jni \
     ImsService \
 	mediatek-carrier-config-manager \
     mediatek-common \

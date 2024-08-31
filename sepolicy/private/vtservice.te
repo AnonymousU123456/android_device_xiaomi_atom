@@ -1,1 +1,12 @@
+type mtk_hal_videotelephony_hwservice;
+type vtservice_hidl;
 allow vtservice vendor_default_prop:file { getattr map open read };
+allow vtservice untrusted_app_32:binder { call };
+allow vtservice untrusted_app:binder { call };
+allow vtservice system_mtk_debug_bq_dump_prop:file { read getattr map open };
+allow vtservice system_mtk_em_tel_log_prop:file { read getattr map open };
+allow vtservice hwservicemanager_prop:file { read getattr map open };
+allow vtservice ccci_device:chr_file { read getattr map open write ioctl };
+allow vtservice mtk_hal_videotelephony_hwservice:hwservice_manager { find };
+binder_call(vtservice, hwservicemanager);
+binder_call(vtservice, vtservice_hidl);

@@ -571,7 +571,7 @@
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
          that can be set by the user. -->
-    <integer name="config_screenBrightnessDoze">17</integer>
+    <integer name="config_screenBrightnessDoze">255</integer>
 
     <!-- Whether the display cutout region of the main built-in display should be forced to
         black in software (to avoid aliasing or emulate a cutout that is not physically existent).
@@ -699,8 +699,9 @@
      <string name="config_wlan_data_service_package">com.android.phone</string>
      <string name="config_wlan_network_service_package">com.android.phone</string>
 
-    <!-- Type of the udfps long press sensor. Empty if long press is not supported. -->
-    <string name="config_dozeUdfpsLongPressSensorType" translatable="false">com.google.sensor.long_press</string>
+    <!-- Control whether the pickup gesture is enabled by default. This value will be used
+     during initialization when the setting is still null. -->
+     <bool name="config_dozePickupGestureEnabled">false</bool>
 
     <!-- Enables or disables haptic effect when the text insertion/selection handle is moved
          manually by the user. Off by default, since the expected haptic feedback may not be

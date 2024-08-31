@@ -1,5 +1,7 @@
 on boot
     swapon_all /vendor/etc/fstab.enableswap
+    wait /sys/class/drm/card0-DSI-1/brightness_clone
+    chown system system /sys/class/drm/card0-DSI-1/brightness_clone
 
 service fps_hal /system/bin/hw/android.hardware.biometrics.fingerprint@2.3-service.xiaomi_atom
     class late_start

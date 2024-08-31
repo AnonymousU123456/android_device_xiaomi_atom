@@ -24,6 +24,7 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     device/xiaomi/atom \
+    hardware/mediatek \
 
 # Boot animation
 TARGET_BOOT_ANIMATION_RES := 1080
@@ -74,7 +75,9 @@ PRODUCT_PACKAGES += \
     libaudiofoundation \
     libaudiofoundation.vendor \
     libaudio-resampler \
-    tinymix 
+    tinymix \
+    MtkInCallService \
+    BesLoudness
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/audio_device.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_device.xml \
@@ -116,6 +119,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal
 PRODUCT_PACKAGES += \
+    init.mi_thermald.rc \
     android.hardware.thermal@1.0-impl \
     android.hardware.thermal@1.0.vendor
 
@@ -130,7 +134,8 @@ PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.2.vendor \
     android.hardware.vibrator-V1-ndk.vendor \
     android.hardware.vibrator@1.0-impl \
-    android.hardware.vibrator@1.0-service
+    android.hardware.vibrator@1.0-service \
+    android.hardware.vibrator-service.mediatek
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -236,20 +241,17 @@ PRODUCT_PACKAGES += \
     android.hardware.ir@1.0-service
 
 # IMS
-PRODUCT_PACKAGES += \
-	libem_support_jni \
-    libem_aoltest_jni \
-    libem_audio_jni \
-    libem_wifi_jni \
-    libem_bleoffload_jni \
 
 $(call inherit-product, $(LOCAL_PATH)/prebuilt/ims-prebuilt.mk)
 
-# INIT
+# VTService
 
 PRODUCT_PACKAGES += \
-    init.mtkincalladj.rc \
-    init.vtservice.rc
+    init.vtservice.rc \
+    libshim_vtservice \
+    libshim_sink \
+    libui_shim \
+    libjni_shim
 
 # Keylayout
 PRODUCT_COPY_FILES += \
@@ -290,7 +292,8 @@ PRODUCT_PACKAGES += \
     android.hardware.power@1.0.vendor \
     android.hardware.power@1.1.vendor \
     android.hardware.power@1.2.vendor \
-    android.hardware.power@1.3.vendor 
+    android.hardware.power@1.3.vendor \
+    android.hardware.power-service-mediatek
 
 # RenderScript
 PRODUCT_PACKAGES += \
@@ -314,7 +317,8 @@ PRODUCT_PACKAGES += \
 
 # USB
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service
+    android.hardware.usb@1.0-service \
+    android.hardware.usb-service.mediatek
 
 # Vendor Init
 PRODUCT_PACKAGES += \

@@ -12,7 +12,7 @@
     <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
     <integer name="config_screenBrightnessSettingMinimum">2</integer>
     <integer name="config_screenBrightnessDim">2</integer>
-    <integer name="config_screenBrightnessDoze">17</integer>
+    <integer name="config_screenBrightnessDoze">255</integer>
     <integer name="config_brightness_ramp_rate_fast">180</integer>
     <integer name="config_brightness_ramp_rate_slow">60</integer>
     <integer name="config_screenBrightnessForVrSettingDefault">86</integer>

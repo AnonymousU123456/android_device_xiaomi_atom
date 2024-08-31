@@ -31,10 +31,12 @@ import androidx.preference.PreferenceManager;
 import static android.provider.Settings.Secure.DOZE_ALWAYS_ON;
 import static android.provider.Settings.Secure.DOZE_ENABLED;
 
+import org.lineageos.settings.utils.FileUtils;
+
 public final class DozeUtils {
 
     private static final String TAG = "DozeUtils";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
 
@@ -48,21 +50,26 @@ public final class DozeUtils {
     protected static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
     protected static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     protected static final String GESTURE_POCKET_KEY = "gesture_pocket";
+    protected static final String HBM_SWITCH = "udfps_need_hbm";
+    protected static final String UDFPS_SWITCH = "udfps_view_state";
+    protected static final String HBM_NODE = "/sys/class/drm/card0-DSI-1/disp_param";
 
     public static void startService(Context context) {
-        if (DEBUG) Log.d(TAG, "Starting service");
+        if (DEBUG)
+            Log.d(TAG, "Starting service");
         context.startServiceAsUser(new Intent(context, DozeService.class),
                 UserHandle.CURRENT);
     }
 
     protected static void stopService(Context context) {
-        if (DEBUG) Log.d(TAG, "Stopping service");
+        if (DEBUG)
+            Log.d(TAG, "Stopping service");
         context.stopServiceAsUser(new Intent(context, DozeService.class),
                 UserHandle.CURRENT);
     }
 
     public static void checkDozeService(Context context) {
-        if (isDozeEnabled(context) && !isAlwaysOnEnabled(context) && sensorsEnabled(context)) {
+        if (isDozeEnabled(context)) {
             startService(context);
         } else {
             stopService(context);
@@ -91,9 +98,11 @@ public final class DozeUtils {
     }
 
     protected static void launchDozePulse(Context context) {
-        if (DEBUG) Log.d(TAG, "Launch doze pulse");
+        if (DEBUG)
+            Log.d(TAG, "Launch doze pulse");
         context.sendBroadcastAsUser(new Intent(DOZE_INTENT),
                 new UserHandle(UserHandle.USER_CURRENT));
+        enableHBMDelayed(context, 300);
     }
 
     protected static boolean enableAlwaysOn(Context context, boolean enable) {
@@ -142,6 +151,27 @@ public final class DozeUtils {
                 return sensor;
             }
         }
+        if (DEBUG)
+            Log.d(TAG, "Not found " + type);
         return null;
+    }
+
+    protected static void enableHBMDelayed(Context context, int delay) {
+        if (Settings.System.getInt(context.getContentResolver(), UDFPS_SWITCH, 0) == 1) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(delay);
+                    } catch (Exception e) {
+                    }
+                    if (Settings.System.getInt(context.getContentResolver(), HBM_SWITCH, 0) == 1) {
+                        if (DEBUG)
+                            Log.d(TAG, "Enable HBM");
+                        FileUtils.writeLine(HBM_NODE, "0x20000");
+                    }
+                }
+            }).start();
+        }
     }
 }
