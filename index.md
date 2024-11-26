@@ -56,6 +56,7 @@ b7decb1bb77e79bb4d4b34e6d0813bba3539689e2497e7d864eff694f7999a54  Flashable-line
 #### 欢迎有能力者通过Issues或PR提出解决方案
 - 蓝牙音频（请使用有线耳机替代）
 - 哔哩哔哩APP播放高分辨率视频时硬件解码异常（请切换至低分辨率）
+- IMS 稳定性问题：在5G网络切换至4G网络，或开关飞行模式，将导致 IMS 连接断开，一旦断开则设备无法拨打电话和接收短信，系统因为未知 bug 无法自动重连IMS，此时只能重启，因为只有在系统启动时，才会连接IMS。**强烈建议设置首选网络为 LTE，以规避此问题。**
 
 ## 感谢 🙌
 @LineageOS @PixelExperience @LawnchairLauncher @phhusson @ymdzq @HuaZoffice @HuaLiMao-AQ @xiaomi-mt6885-devs @MiCode 以及为本项目做出贡献的其他commiters，各位捐赠者们！
